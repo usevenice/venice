@@ -1,0 +1,17 @@
+{
+  "name": "@ledger-sync/engine-common",
+  "version": "0.0.0",
+  "private": true,
+  "sideEffects": false,
+  "module": "./index.ts",
+  "dependencies": {
+    "@ledger-sync/cdk-core": "*",
+    "@ledger-sync/util": "*",
+    "@trpc/server": "9.26.0",
+    "jsonwebtoken": "8.5.1"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "8.5.9"
+  },
+  "peerDependencies": {}
+}

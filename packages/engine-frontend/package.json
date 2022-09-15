@@ -7,6 +7,7 @@
   "dependencies": {
     "@headlessui/react": "1.7.0",
     "@ledger-sync/cdk-core": "*",
+    "@ledger-sync/engine-common": "*",
     "@ledger-sync/util": "*",
     "@radix-ui/react-dialog": "1.0.0",
     "@react-hookz/web": "15.1.0",
@@ -14,7 +15,6 @@
     "@trpc/react": "9.26.0",
     "@trpc/server": "9.26.0",
     "framer-motion": "6.5.1",
-    "jsonwebtoken": "8.5.1",
     "phosphor-react": "1.4.1",
     "react": "*",
     "react-dom": "*",
@@ -23,7 +23,6 @@
   },
   "devDependencies": {
     "@ledger-sync/engine-backend": "*",
-    "@types/jsonwebtoken": "8.5.9",
     "@types/react": "*",
     "react-query": "^3.37.0"
   },

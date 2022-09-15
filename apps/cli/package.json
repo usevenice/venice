@@ -8,6 +8,7 @@
     "@ledger-sync/core-integration-firebase": "*",
     "@ledger-sync/core-integration-postgres": "*",
     "@ledger-sync/engine-backend": "*",
+    "@ledger-sync/engine-common": "*",
     "@ledger-sync/id": "*",
     "@ledger-sync/integration-beancount": "*",
     "@ledger-sync/integration-onebrick": "*",

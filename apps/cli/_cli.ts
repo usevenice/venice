@@ -7,7 +7,7 @@ import '@ledger-sync/app-config/register.node'
 
 import {loadedEnv} from '@ledger-sync/app-config/register.node'
 import {makePostgresMetaService} from '@ledger-sync/core-integration-postgres'
-import {makeJwtClient} from '@ledger-sync/engine-backend'
+import {makeJwtClient} from '@ledger-sync/engine-common'
 import {makeOneBrickClient} from '@ledger-sync/integration-onebrick'
 // Make this import dynamic at runtime, so we can do
 // dynamic-cli plaid ......  or

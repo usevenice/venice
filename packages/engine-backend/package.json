@@ -7,11 +7,9 @@
   "dependencies": {
     "@ledger-sync/cdk-core": "*",
     "@ledger-sync/cdk-ledger": "*",
+    "@ledger-sync/engine-common": "*",
     "@ledger-sync/util": "*",
-    "@trpc/server": "9.26.0",
-    "jsonwebtoken": "8.5.1"
+    "@trpc/server": "9.26.0"
   },
-  "devDependencies": {
-    "@types/jsonwebtoken": "8.5.9"
-  }
+  "devDependencies": {}
 }

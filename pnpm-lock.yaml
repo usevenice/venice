@@ -193,6 +193,7 @@ importers:
       '@ledger-sync/core-integration-firebase': '*'
       '@ledger-sync/core-integration-postgres': '*'
       '@ledger-sync/engine-backend': '*'
+      '@ledger-sync/engine-common': '*'
       '@ledger-sync/id': '*'
       '@ledger-sync/integration-beancount': '*'
       '@ledger-sync/integration-onebrick': '*'
@@ -217,6 +218,7 @@ importers:
       '@ledger-sync/core-integration-firebase': link:../../packages/@integrations/core-integration-firebase
       '@ledger-sync/core-integration-postgres': link:../../packages/@integrations/core-integration-postgres
       '@ledger-sync/engine-backend': link:../../packages/engine-backend
+      '@ledger-sync/engine-common': link:../../packages/engine-common
       '@ledger-sync/id': link:../../packages/@utils/id
       '@ledger-sync/integration-beancount': link:../../packages/@integrations/integration-beancount
       '@ledger-sync/integration-onebrick': link:../../packages/@integrations/integration-onebrick
@@ -837,13 +839,25 @@ importers:
     specifiers:
       '@ledger-sync/cdk-core': '*'
       '@ledger-sync/cdk-ledger': '*'
+      '@ledger-sync/engine-common': '*'
+      '@ledger-sync/util': '*'
+      '@trpc/server': 9.26.0
+    dependencies:
+      '@ledger-sync/cdk-core': link:../cdk-core
+      '@ledger-sync/cdk-ledger': link:../cdk-ledger
+      '@ledger-sync/engine-common': link:../engine-common
+      '@ledger-sync/util': link:../@utils/util
+      '@trpc/server': 9.26.0_7dg2hkb5vsyvp4d3ht7xgb4spm
+
+  packages/engine-common:
+    specifiers:
+      '@ledger-sync/cdk-core': '*'
       '@ledger-sync/util': '*'
       '@trpc/server': 9.26.0
       '@types/jsonwebtoken': 8.5.9
       jsonwebtoken: 8.5.1
     dependencies:
       '@ledger-sync/cdk-core': link:../cdk-core
-      '@ledger-sync/cdk-ledger': link:../cdk-ledger
       '@ledger-sync/util': link:../@utils/util
       '@trpc/server': 9.26.0_7dg2hkb5vsyvp4d3ht7xgb4spm
       jsonwebtoken: 8.5.1
@@ -855,16 +869,15 @@ importers:
       '@headlessui/react': 1.7.0
       '@ledger-sync/cdk-core': '*'
       '@ledger-sync/engine-backend': '*'
+      '@ledger-sync/engine-common': '*'
       '@ledger-sync/util': '*'
       '@radix-ui/react-dialog': 1.0.0
       '@react-hookz/web': 15.1.0
       '@trpc/client': 9.26.0
       '@trpc/react': 9.26.0
       '@trpc/server': 9.26.0
-      '@types/jsonwebtoken': 8.5.9
       '@types/react': '*'
       framer-motion: 6.5.1
-      jsonwebtoken: 8.5.1
       phosphor-react: 1.4.1
       react: '*'
       react-dom: '*'
@@ -873,6 +886,7 @@ importers:
     dependencies:
       '@headlessui/react': 1.7.0_sfoxds7t5ydpegc3knd667wn6m
       '@ledger-sync/cdk-core': link:../cdk-core
+      '@ledger-sync/engine-common': link:../engine-common
       '@ledger-sync/util': link:../@utils/util
       '@radix-ui/react-dialog': 1.0.0_xd63vgjm47lzoal5ybyqmsdesy
       '@react-hookz/web': 15.1.0_sfoxds7t5ydpegc3knd667wn6m
@@ -880,7 +894,6 @@ importers:
       '@trpc/react': 9.26.0_irv66ybkadcialtmo3uz32bymi
       '@trpc/server': 9.26.0_7dg2hkb5vsyvp4d3ht7xgb4spm
       framer-motion: 6.5.1_sfoxds7t5ydpegc3knd667wn6m
-      jsonwebtoken: 8.5.1
       phosphor-react: 1.4.1_react@17.0.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
@@ -888,7 +901,6 @@ importers:
       tailwind-merge: 1.6.0
     devDependencies:
       '@ledger-sync/engine-backend': link:../engine-backend
-      '@types/jsonwebtoken': 8.5.9
       '@types/react': 17.0.39
 
 packages:

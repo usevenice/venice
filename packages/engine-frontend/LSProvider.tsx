@@ -1,6 +1,5 @@
 import {httpLink} from '@trpc/client/links/httpLink'
 import {createReactQueryHooks} from '@trpc/react'
-import {decode as jwtDecode} from 'jsonwebtoken'
 import React from 'react'
 
 import type {
@@ -11,6 +10,7 @@ import type {
   UseConnectHook,
 } from '@ledger-sync/cdk-core'
 import type {AnySyncRouter, SyncEngineConfig} from '@ledger-sync/engine-backend'
+import {zUserInfo} from '@ledger-sync/engine-common'
 import {R} from '@ledger-sync/util'
 
 import {useGetter} from '../../apps/next/pages/_app'
@@ -71,10 +71,13 @@ export function LSProvider<
 
   const url = config.apiUrl ?? '/api'
 
-  const getAccessToken = useGetter(accessToken)
+  const zContextFromAccessToken = zUserInfo({
+    parseJwtPayload: config.parseJwtPayload,
+  })
+  const context = zContextFromAccessToken.parse(accessToken)
+  console.log('context', context)
 
-  const data = accessToken ? jwtDecode(accessToken, {json: true}) : null
-  console.log('data', data)
+  const getAccessToken = useGetter(accessToken)
 
   // const getLedgerId = useGetter(ledgerId) // Pass me to the server...
 

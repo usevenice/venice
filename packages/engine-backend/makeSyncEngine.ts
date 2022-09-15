@@ -23,10 +23,10 @@ import {
   zStandard,
   zWebhookInput,
 } from '@ledger-sync/cdk-core'
+import type {ParseJwtPayload, UserInfo} from '@ledger-sync/engine-common'
+import {makeJwtClient, zUserInfo} from '@ledger-sync/engine-common'
 import {compact, R, rxjs, z, zTrimedString} from '@ledger-sync/util'
 
-import type {ParseJwtPayload, UserInfo} from './auth-utils'
-import {makeJwtClient, zUserInfo} from './auth-utils'
 import {makeMetaLinks} from './makeMetaLinks'
 import type {
   ConnectionInput,
@@ -605,7 +605,7 @@ export const makeSyncEngine = <
 
   const zAccessTokenContext = zUserInfo({
     parseJwtToken: jwtClient ? jwtClient.verify : undefined,
-    parseJwtPayload: parseJwtPayload,
+    parseJwtPayload,
   })
 
   return {router, jwtClient, zAccessTokenContext}
