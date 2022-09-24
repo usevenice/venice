@@ -1,18 +1,8 @@
 import React from 'react'
 
-import type {SyncOperation} from '@ledger-sync/cdk-core'
 import {makeSyncProvider, zId, zWebhookInput} from '@ledger-sync/cdk-core'
 import {ledgerSyncProviderBase, makePostingsMap} from '@ledger-sync/cdk-ledger'
-import {
-  A,
-  Deferred,
-  identity,
-  md5Hash,
-  parseMoney,
-  Rx,
-  rxjs,
-  z,
-} from '@ledger-sync/util'
+import {A, Deferred, md5Hash, parseMoney, Rx, rxjs, z} from '@ledger-sync/util'
 
 import {
   accountItemSchema,
@@ -25,9 +15,6 @@ const connectInputSchema = z.object({
   publicToken: z.string().nullish(),
   redirect_url: z.string().nullish(),
 })
-
-type OnebrickEntity = z.infer<typeof def['sourceOutputEntity']>
-type OnebrickSyncOperation = SyncOperation<OnebrickEntity>
 
 const zOneBrickWebhookBody = z.object({
   accessToken: z.string(),
@@ -62,56 +49,51 @@ const def = makeSyncProvider.def.helpers(_def)
 
 export const oneBrickProvider = makeSyncProvider({
   ...ledgerSyncProviderBase(def, {
-    sourceMapEntity: (data) => {
-      if (data.entityName === 'account') {
-        const a = data.entity
-        return {
-          id: a.accountId,
-          entityName: 'account',
-          entity: {
-            name: a.accountHolder,
-            type: 'asset/digital_wallet',
-            institutionName: a.type,
-            informationalBalances: {
-              current: A(
-                parseMoney((a.balances.current ?? 0).toString()),
-                a.currency.toUpperCase(),
+    sourceMapEntity: {
+      account: ({entity: a}, _extConn) => ({
+        id: a.accountId,
+        entityName: 'account',
+        entity: {
+          name: a.accountHolder,
+          type: 'asset/digital_wallet',
+          institutionName: a.type,
+          informationalBalances: {
+            current: A(
+              parseMoney((a.balances.current ?? 0).toString()),
+              a.currency.toUpperCase(),
+            ),
+          },
+          defaultUnit: a.currency as Unit,
+        },
+      }),
+      transaction: ({entity: t}, _extConn) => ({
+        id: t.reference_id,
+        entityName: 'transaction',
+        entity: {
+          date: t.date,
+          description: t.description,
+          externalCategory: t.category.category_name,
+          // TODO: Check how merchant_id maps to payee
+          postingsMap: makePostingsMap({
+            main: {
+              accountExternalId: t.account_id as Id.external,
+              amount: A(
+                t.amount * (t.direction === 'in' ? 1 : -1),
+                (t.account_currency ?? 'IDR') as Unit,
               ),
             },
-            defaultUnit: a.currency as Unit,
-          },
-        }
-      }
-      if (data.entityName === 'transaction') {
-        const t = data.entity
-        return {
-          id: t.reference_id,
-          entityName: 'transaction',
-          entity: {
-            date: t.date,
-            description: data.entity.description,
-            externalCategory: data.entity.category.category_name,
-            // TODO: Check how merchant_id maps to payee
-            postingsMap: makePostingsMap({
-              main: {
-                accountExternalId: data.entity.account_id as Id.external,
-                amount: A(
-                  data.entity.amount * (t.direction === 'in' ? 1 : -1),
-                  (data.entity.account_currency ?? 'IDR') as Unit,
-                ),
-              },
-            }),
-          },
-        }
-      }
-      return null
+          }),
+        },
+      }),
     },
   }),
+
   preConnect: (config, {envName}) =>
     Promise.resolve({
       publicToken: config.secrets[envName as 'production' | 'sandbox'],
       redirect_url: config.redirectUrl,
     }),
+
   useConnectHook: (_) => {
     const [options, setOptions] = React.useState<
       z.infer<typeof connectInputSchema>
@@ -127,6 +109,7 @@ export const oneBrickProvider = makeSyncProvider({
         )
       }
     }, [options])
+
     return (opts) => {
       setOptions({
         publicToken: opts.publicToken,
@@ -142,30 +125,22 @@ export const oneBrickProvider = makeSyncProvider({
       accessToken: settings.accessToken,
     })
     async function* iterateEntities() {
-      const res = await client.getAccountList({
+      const accounts = await client.getAccountList({
         accessToken: settings.accessToken,
       })
-      yield res.map((a) =>
-        _op({
-          type: 'data',
-          data: {id: a.accountId, entity: a, entityName: 'account'},
-        }),
-      )
+      const transactions = await client.getTransactions({
+        accessToken: settings.accessToken,
+      })
 
-      const res2 = await client.getTransactions({
-        accessToken: settings.accessToken,
-      })
-      yield res2.map((t) =>
-        _op({
-          type: 'data',
-          data: {id: t.reference_id, entity: t, entityName: 'transaction'},
-        }),
+      yield accounts.map((a) => def._opData('account', a.accountId, a))
+      yield transactions.map((t) =>
+        def._opData('transaction', t.reference_id, t),
       )
     }
 
     return rxjs
       .from(iterateEntities())
-      .pipe(Rx.mergeMap((ops) => rxjs.from([...ops, _op({type: 'commit'})])))
+      .pipe(Rx.mergeMap((ops) => rxjs.from([...ops, def._op('commit')])))
   },
 
   handleWebhook: (input, _config) => {
@@ -181,5 +156,3 @@ export const oneBrickProvider = makeSyncProvider({
     })
   },
 })
-
-const _op: typeof identity<OnebrickSyncOperation> = identity

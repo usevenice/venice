@@ -169,7 +169,7 @@ export const zOneBrickConfig = z.object({
 })
 
 /**
- * TODO: Switch to v2 api and OpenAPI based implementation
+ * // TODO: Switch to v2 api and OpenAPI based implementation
  *
  * curl --request GET \
      --url https://dash.readme.com/api/v1/api-registry/rwkfe1gl7puob14 \
