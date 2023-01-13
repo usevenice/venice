@@ -17,6 +17,8 @@ import {joinPath, R, Rx, zParser} from '@usevenice/util'
 import {veniceCommonConfig} from './commonConfig'
 import {parseIntConfigsFromRawEnv, zAllEnv} from './env'
 
+export {makePostgresClient} from '@usevenice/integration-postgres'
+
 const env = zParser(zAllEnv).parseUnknown(process.env)
 
 export const backendEnv = env

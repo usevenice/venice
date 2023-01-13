@@ -108,6 +108,8 @@ export type AnySyncMutationOutput<
   K extends keyof AnySyncRouter['_def']['mutations'],
 > = inferProcedureOutput<AnySyncRouter['_def']['mutations'][K]>
 
+export const baseRouter: typeof trpc.router<UserInfo, EngineMeta> = trpc.router
+
 export const makeSyncEngine = <
   TProviders extends readonly AnySyncProvider[],
   TLinks extends Record<string, LinkFactory>,
@@ -304,8 +306,6 @@ export const makeSyncEngine = <
         .stateUpdate({type: 'stateUpdate', subtype: 'complete'}),
     )
   }
-
-  const baseRouter: typeof trpc.router<UserInfo, EngineMeta> = trpc.router
 
   const anonRouter = baseRouter()
     .query('health', {resolve: () => 'Ok ' + new Date().toISOString()})

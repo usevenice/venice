@@ -7,6 +7,8 @@ import {
 } from '@usevenice/core-integration-postgres'
 import {R, rxjs, z, zCast} from '@usevenice/util'
 
+export {makePostgresClient} from '@usevenice/core-integration-postgres'
+
 const def = makeSyncProvider.def({
   ...makeSyncProvider.def.defaults,
   name: z.literal('postgres'),

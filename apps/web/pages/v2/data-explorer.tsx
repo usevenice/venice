@@ -2,7 +2,7 @@ import type {GridCell, GridColumn, Item} from '@glideapps/glide-data-grid'
 import {GridCellKind} from '@glideapps/glide-data-grid'
 import {Auth} from '@supabase/auth-ui-react'
 import dynamic from 'next/dynamic'
-import React from 'react'
+import React, {useState} from 'react'
 import {useSelect} from 'react-supabase'
 
 import {Container} from '@usevenice/ui'
@@ -13,6 +13,8 @@ import {useRouterPlus} from '../../contexts/atoms'
 
 import '@glideapps/glide-data-grid/dist/index.css'
 
+import {VeniceProvider} from '@usevenice/engine-frontend'
+
 const DataEditor = dynamic(
   () => import('@glideapps/glide-data-grid').then((r) => r.DataEditor),
   {ssr: false},
@@ -20,7 +22,8 @@ const DataEditor = dynamic(
 
 export default function DataExplorerScreen() {
   const {user} = Auth.useUser()
-  const router = useRouterPlus()
+
+  const {trpcClient} = VeniceProvider.useContext()
 
   const [connsRes] = useSelect('connection')
   console.log('conns', connsRes.data)
@@ -67,6 +70,8 @@ export default function DataExplorerScreen() {
   //   )
   // }
 
+  const [sql, setSql] = useState('')
+
   return (
     <Layout
       links={[
@@ -75,6 +80,25 @@ export default function DataExplorerScreen() {
       ]}>
       <Container className="flex-1">
         <span className="text-xs">You are logged in as {user?.id}</span>
+        <textarea
+          value={sql}
+          onChange={(e) => setSql(e.target.value)}></textarea>
+        <button
+          onClick={async () => {
+            // @ts-expect-error
+            const res = await trpcClient.mutation('executeSql', {sql})
+            console.log('executeSql result', res)
+          }}>
+          Execute SQL
+        </button>
+        <button
+          onClick={async () => {
+            // @ts-expect-error
+            const res = await trpcClient.mutation('createDbUser', {})
+            console.log('executeSql result', res)
+          }}>
+          create db user
+        </button>
         Connections
         <ul>
           {connsRes.data?.map((conn) => (
